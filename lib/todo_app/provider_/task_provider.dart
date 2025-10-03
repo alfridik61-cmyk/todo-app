@@ -53,7 +53,7 @@ class TaskProvider with ChangeNotifier {
   }
 
   Future<void> updateTask(Task task) async {
-    final url = Uri.parse("http://192.168.1.64:3000/tasks/${task.id}");
+    final url = Uri.parse("https://192.168.1.64:3000/tasks/${task.id}");
     final response = await http.put(
       url,
       headers: {"Content-Type": "application/json"},
