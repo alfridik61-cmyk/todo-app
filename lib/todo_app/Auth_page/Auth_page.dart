@@ -12,9 +12,13 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
-  bool isloading = false;
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController(
+    text: "emilys",
+  );
+  final TextEditingController _passwordController = TextEditingController(
+    text: "emilyspass",
+  );
+  bool obsecurepassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -31,83 +35,97 @@ class _AuthPageState extends State<AuthPage> {
 
     return Scaffold(
       backgroundColor: Color(0xFFE5DDD5),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Sign in to your account",
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Sign in to your account",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "please enter your email";
-                  }
-                  return null;
-                },
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5),
-              child: TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
+              SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: TextFormField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter your email";
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "please enter your password";
-                  }
-                  if (value.length < 6) {
-                    return "password must be atleast 6 characters";
-                  }
-                  return null;
-                },
               ),
-            ),
-            ElevatedButton(
-              // onPressed: () {
-              //   Provider.of<UsernameProvider>(context, listen: false).login(
-              //     context: context,
-              //     username: _usernameController.text.trim(),
-              //     password: _passwordController.text.trim(),
-              //   );
-              // },
-              onPressed: () async {
-                if (isloading) return;
-                setState(() => isloading = true);
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: TextFormField(
+                  controller: _passwordController,
+                  obscureText: obsecurepassword,
+                  decoration: InputDecoration(
+                    labelText: "password",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obsecurepassword = !obsecurepassword;
+                        });
+                      },
+                      icon: Icon(
+                        obsecurepassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "please enter your password";
+                    }
+                    if (value.length < 6) {
+                      return "password must be atleast 6 characters";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              ElevatedButton(
+                // onPressed: () {
+                //   Provider.of<UsernameProvider>(context, listen: false).login(
+                //     context: context,
+                //     username: _usernameController.text.trim(),
+                //     password: _passwordController.text.trim(),
+                //   );
+                // },
+                onPressed: () {
+                  // if (isloading) return;
+                  // setState(() => isloading = true);
 
-                await provider.login(
-                  context: context,
-                  username: _usernameController.text.trim(),
-                  password: _passwordController.text.trim(),
-                  expiresInMins: 1,
-                );
-                setState(() => isloading = false);
-              },
-              child: isloading ? CircularProgressIndicator() : Text("Login"),
-            ),
-          ],
+                  provider.login(
+                    context: context,
+                    username: _usernameController.text.trim(),
+                    password: _passwordController.text.trim(),
+                    expiresInMins: 1,
+                  );
+                  // setState(() => isloading = false);
+                },
+                child: Text("Login"),
+              ),
+            ],
+          ),
         ),
       ),
     );

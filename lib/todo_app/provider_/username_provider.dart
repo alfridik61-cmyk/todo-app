@@ -10,10 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UsernameProvider with ChangeNotifier {
   String _username = 'jack';
   String get username => _username;
-   bool _isloading = false;
+  bool _isloading = false;
   UserData? _userdata;
-  bool get isloading =>_isloading;
-  UserData get userData => _userdata!;
+  bool get isloading => _isloading;
+  UserData? get userData => _userdata;
 
   void setUsername(String newName) {
     _username = newName;
@@ -51,9 +51,9 @@ class UsernameProvider with ChangeNotifier {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', data['accessToken']);
-        await prefs.setString('refresh_token', data['refreshToken']);
+        // await prefs.setString('refresh_token', data['refreshToken']);
         String? accessToken = prefs.getString('access_token');
-        String? refreshToken = prefs.getString('refresh_token');
+        // String? refreshToken = prefs.getString('refresh_token');
 
         if (accessToken != null && accessToken.isNotEmpty) {
           debugPrint("Token saved: $accessToken");
@@ -91,7 +91,8 @@ class UsernameProvider with ChangeNotifier {
         url,
         headers: {"Authorization": "Bearer $accessToken"},
       );
-
+      // final decodeToken = jsonDecode(accessToken);
+      // if(decodeToken.exp)
       if (response.statusCode == 200) {
         UserData userDataItem = UserData.fromJson(jsonDecode(response.body));
         _userdata = userDataItem;
@@ -99,14 +100,14 @@ class UsernameProvider with ChangeNotifier {
         debugPrint("user data : $_userdata");
         notifyListeners();
       } else if (response.statusCode == 401) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.clear();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AuthPage()),
-        );
-        // await refreshToken();
-        // return userdata();
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // prefs.clear();
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => AuthPage()),
+        // );
+        await refreshToken();
+        return userdata(context);
       } else {
         debugPrint("Error: ${response.statusCode}");
       }

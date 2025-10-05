@@ -4,6 +4,7 @@ import 'package:flutter_application_learning/todo_app/dialog_pages/showdialog.da
 import 'package:flutter_application_learning/todo_app/provider_/username_provider.dart';
 import 'package:flutter_application_learning/todo_app/task.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_application_learning/todo_app/user_data/userData.dart';
 import 'package:flutter_application_learning/todo_app/widget_pages/profilepage.dart';
 import 'widget_pages/stats_item.dart';
 import 'widget_pages/task_item.dart';
@@ -54,8 +55,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-  
 
   void change_username() {
     final TextEditingController _usernameController = TextEditingController();
@@ -120,12 +119,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {
-              
-            },
-          ),
+          IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
           SizedBox(width: 0),
           IconButton(
             icon: Icon(Icons.add),
